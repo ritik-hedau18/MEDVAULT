@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  medvault-db:
+    image: postgres:15-alpine
+    container_name: medvault-db
+    ports:
+      - "5435:5432"
+    environment:
+      POSTGRES_DB: medvault_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+    volumes:
+      - medvault_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d medvault_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  medvault-backend:
+    build: ./backend
+    container_name: medvault-backend
+    ports:
+      - "8085:8085"
+    environment:
+      - DB_HOST=medvault-db
+      - DB_PORT=5432
+      - DB_NAME=medvault_db
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=root
+      - JWT_SECRET=medvault-patient-controlled-health-records-super-secret-signature-key
+      - CORS_ORIGINS=http://localhost:5173
+    depends_on:
+      medvault-db:
+        condition: service_healthy
+
+  medvault-frontend:
+    build: ./frontend
+    container_name: medvault-frontend
+    ports:
+      - "5175:80"
+    depends_on:
+      - medvault-backend
+
+volumes:
+  medvault_pgdata:

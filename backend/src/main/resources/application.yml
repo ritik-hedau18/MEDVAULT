@@ -1,0 +1,38 @@
+server:
+  port: 8085
+
+spring:
+  application:
+    name: medvault
+  profiles:
+    active: dev
+
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:medvault_db}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:root}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:medvault-patient-controlled-health-records-super-secret-signature-key}
+    expiration-ms: 86400000
+  cors:
+    allowed-origins: ${CORS_ORIGINS:http://localhost:5173}
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+# minor tweak: update verification rules and configs
