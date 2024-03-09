@@ -1,0 +1,12 @@
+package com.ritikhedau.medvault;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class MedVaultApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(MedVaultApplication.class, args);
+    }
+}
+// minor tweak: update verification rules and configs
